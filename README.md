@@ -6,7 +6,7 @@ Still experimental, and subject to change a lot:
 The goal is to test, if trilium can scale. Hopefully to make reproducing errors at scale more easy.
 
 # Goal
-Make reproducing errors on large scale databases for trilium more reproducible by providing code to automatically create databases.
+Make errors on large scale databases for trilium more reproducible by providing code to automatically create them.
 
 # WIP
 What still has to be done to make it useful?
@@ -18,4 +18,3 @@ Legend:
   - [ ] Create Enhanced Trilium Wordnet notes + Random Images
   - [ ] Create Enhanced Trilium Wordnet notes + Lorem Ipsum content
 - [ ] Create Trilium Databases with Lots of Images (Maybe using Machine Learning Databases)
-
