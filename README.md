@@ -20,7 +20,7 @@ Legend:
 - [ ] Include Trilium database for ConceptNet [^2] or YAGO [^3]
 - [ ] Create Trilium databases with lots of images (using open machine learning datasets)
 - [ ] Create Trilium databases with lots of videos (using open machine learning datasets)
-
+- [ ] Write a simple guide to test it with trilium
 
 # Footnotes
 [^1]: https://www.nltk.org/howto/wordnet.html
