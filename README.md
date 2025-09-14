@@ -14,7 +14,15 @@ What still has to be done to make it useful?
 Legend:  
 ' ' = TODO; '<-' = Currently Doing; 'X' = DONE
 
-- [ ] Include Trilium databases from WordNet to create notes that feel kind of "natural" (text only) <-
+- [ ] Include Trilium database for WordNet [^1] to create notes that feel kind of "natural" (text only) <-
   - [ ] Create enhanced Trilium WordNet notes + random images  
   - [ ] Create enhanced Trilium WordNet notes + Lorem Ipsum content  
-- [ ] Create Trilium databases with lots of images (maybe using machine learning datasets)
+- [ ] Include Trilium database for ConceptNet [^2] or YAGO [^3]
+- [ ] Create Trilium databases with lots of images (using open machine learning datasets)
+- [ ] Create Trilium databases with lots of videos (using open machine learning datasets)
+
+
+# Footnotes
+[^1]: https://www.nltk.org/howto/wordnet.html
+[^2]: https://conceptnet.io/
+[^3]: https://yago-knowledge.org/
