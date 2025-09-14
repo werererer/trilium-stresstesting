@@ -22,7 +22,7 @@ Legend:
 - [ ] Create Trilium databases with lots of videos (using open machine learning datasets)
 - [ ] Write a simple guide to test it with trilium
 
-# Footnotes
+# References
 [^1]: https://www.nltk.org/howto/wordnet.html
 [^2]: https://conceptnet.io/
 [^3]: https://yago-knowledge.org/
