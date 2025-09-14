@@ -3,10 +3,10 @@ Tools to stresstest trilium, to help proof it working at scale.
 
 Still experimental, and subject to change a lot:
 
-The goal is to test, if trilium can scale. Especially for personal/research interest
+The goal is to test, if trilium can scale. Hopefully to make reproducing errors at scale more easy.
 
-# Goals
-Make reproducing errors on large scale databases for trilium more reproducible
+# Goal
+Make reproducing errors on large scale databases for trilium more reproducible by providing code to automatically create databases.
 
 # WIP
 What still has to be done to make it useful?
