@@ -23,12 +23,6 @@ Legend:
 - [ ] Create Trilium databases with lots of videos (using open machine learning datasets)
 - [ ] Write a simple guide to test it with trilium
 
-# References
-[^1]: https://www.nltk.org/howto/wordnet.html
-[^2]: https://conceptnet.io/
-[^3]: https://yago-knowledge.org/
-The goal is to test, if trilium can scale. Especially for personal/research interest
-
 ## Execute
 ```bash
 docker compose up -d
@@ -38,3 +32,9 @@ After being done
 ```
 docker compose down
 ```
+
+# References
+[^1]: https://www.nltk.org/howto/wordnet.html
+[^2]: https://conceptnet.io/
+[^3]: https://yago-knowledge.org/
+
