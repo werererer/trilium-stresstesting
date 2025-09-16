@@ -1,5 +1,6 @@
-# trilium-stresstesting
+# trilium-stresstesting (WIP)
 Tools to stress-test Trilium, to help prove it works at scale.
+Tools to stresstest trilium, to help proof it working at scale.
 
 Still experimental, and subject to change a lot.
 
@@ -26,3 +27,14 @@ Legend:
 [^1]: https://www.nltk.org/howto/wordnet.html
 [^2]: https://conceptnet.io/
 [^3]: https://yago-knowledge.org/
+The goal is to test, if trilium can scale. Especially for personal/research interest
+
+## Execute
+```bash
+docker compose up -d
+```
+
+After being done
+```
+docker compose down
+```

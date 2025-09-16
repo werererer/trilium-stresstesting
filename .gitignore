@@ -1,0 +1,9 @@
+# Ignore large dataset archives
+*.tar.gz
+*.tar
+*.zip
+
+trilium-data/
+.env
+
+**/assets/
