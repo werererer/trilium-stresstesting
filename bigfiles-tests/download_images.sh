@@ -11,7 +11,7 @@ if [[ ! -f "$TSV_FILE" ]]; then
   wget -c -O "$TSV_FILE" "https://storage.googleapis.com/cvdf-datasets/oid/open-images-dataset-train0.tsv"
 fi
 
-LIMIT=100000   # total images to fetch
+LIMIT=10000   # total images to fetch
 PER_FOLDER=1000
 
 echo "⚙️ Downloading $LIMIT images into folders of $PER_FOLDER..."
@@ -28,7 +28,29 @@ tail -n +2 "$TSV_FILE" | head -n "$LIMIT" | cut -d'>' -f1 | \
     fi
 
     echo "📥 [$lineno/$LIMIT] → saving to $outfile"
-    wget -c -O "$outfile" "$url" || echo "❌ Failed: $url"
+    delay=2
+    attempt=1
+    while true; do
+        if wget -c -O "$outfile" "$url"; then
+            # success
+            break
+        fi
+
+        status=$?
+
+        if [ $status -eq 8 ]; then
+            echo "⚠️ Attempt $attempt failed (HTTP error, maybe 429). Retrying in $delay seconds..."
+            sleep $delay
+            delay=$((delay * 2))
+            if [ $delay -gt 60 ]; then
+                delay=60
+            fi
+            attempt=$((attempt + 1))
+        else
+            echo "❌ Failed with non-retryable error (code $status)."
+            break
+        fi
+    done
   done
 
 echo "✅ Done. Images saved in $ASSETS_DIR/00, $ASSETS_DIR/01, …"
