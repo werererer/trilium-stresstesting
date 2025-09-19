@@ -3,6 +3,7 @@
 *.tar
 *.zip
 *.pdf
+*.log
 
 trilium-data/
 .env
