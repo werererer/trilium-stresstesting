@@ -28,30 +28,31 @@ tail -n +2 "$TSV_FILE" | head -n "$LIMIT" | cut -d'>' -f1 | \
     fi
 
     echo "📥 [$lineno/$LIMIT] → saving to $outfile"
+
     delay=2
     attempt=1
     while true; do
-        if wget -c -O "$outfile" "$url"; then
-            # success
+        if wget -c -O "$outfile" "$url" 2> >(tee err.log >&2); then
+            # wget printed normally to terminal
             break
         fi
 
         status=$?
 
-        if [ $status -eq 8 ]; then
-            echo "⚠️ Attempt $attempt failed (HTTP error, maybe 429). Retrying in $delay seconds..."
+        if grep -q "429 Too Many Requests" err.log; then
+            echo "⚠️ Attempt $attempt: got 429. Retrying in $delay seconds..."
             sleep $delay
             delay=$((delay * 2))
-            if [ $delay -gt 60 ]; then
-                delay=60
-            fi
+            [ $delay -gt 1800 ] && delay=1800   # cap at 30 minutes
             attempt=$((attempt + 1))
         else
-            echo "❌ Failed with non-retryable error (code $status)."
+            echo "❌ Failed with non-retryable error (exit code $status)."
             break
         fi
     done
   done
+
+
 
 echo "✅ Done. Images saved in $ASSETS_DIR/00, $ASSETS_DIR/01, …"
 
