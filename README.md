@@ -15,12 +15,15 @@ What still has to be done to make it useful?
 Legend:  
 ' ' = TODO; '<-' = Currently Doing; 'X' = DONE
 
+Plan:
+
+- [ ] Create Trilium database with lots of notes (using wordnet)
+- [ ] Create Trilium database with lots of images (using open machine learning datasets)
+- [ ] Create Trilium database with lots of videos (using open machine learning datasets)
 - [ ] Include Trilium database for WordNet [^1] to create notes that feel kind of "natural" (text only) <-
   - [ ] Create enhanced Trilium WordNet notes + random images  
   - [ ] Create enhanced Trilium WordNet notes + Lorem Ipsum content  
 - [ ] Include Trilium database for ConceptNet [^2] or YAGO [^3]
-- [ ] Create Trilium databases with lots of images (using open machine learning datasets)
-- [ ] Create Trilium databases with lots of videos (using open machine learning datasets)
 - [ ] Write a simple guide to test it with trilium
 
 ## Execute
