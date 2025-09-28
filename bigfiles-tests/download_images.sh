@@ -3,7 +3,7 @@ set -euo pipefail
 
 ASSETS_DIR="assets/openimages"
 TSV_FILE="$ASSETS_DIR/open-images-dataset-train0.tsv"
-LIMIT=10000   # total images to fetch
+LIMIT=2000   # total images to fetch
 PER_FOLDER=1000
 
 mkdir -p "$ASSETS_DIR"
