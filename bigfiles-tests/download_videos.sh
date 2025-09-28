@@ -3,42 +3,67 @@ set -euo pipefail
 
 ASSETS_DIR="assets"
 YOUCOOK_DIR="$ASSETS_DIR/youcook2"
+RAW_VIDEOS_URL="https://prism.eecs.umich.edu/natlouis/youcook2/raw_videos.tar.gz"
+
+RAW_ARCHIVE="$YOUCOOK_DIR/raw_videos.tar.gz"
+TMP_ARCHIVE="${RAW_ARCHIVE}.part"
+
 mkdir -p "$YOUCOOK_DIR"
 
-echo "📂 Downloading YouCook2 raw videos..."
-
-RAW_VIDEOS_URL="https://prism.eecs.umich.edu/natlouis/youcook2/raw_videos.tar.gz"
-RAW_ARCHIVE="$YOUCOOK_DIR/raw_videos.tar.gz"
+# ----------------------------------------
+# Functions
+# ----------------------------------------
 
 download_archive() {
-  wget --tries=20 --retry-connrefused -c --no-check-certificate \
-       -O "$RAW_ARCHIVE" "$RAW_VIDEOS_URL"
+    echo "📥 Downloading archive (resume supported)..."
+    wget --tries=20 --retry-connrefused --no-check-certificate -c \
+         -O "$TMP_ARCHIVE" "$RAW_VIDEOS_URL"
+    mv "$TMP_ARCHIVE" "$RAW_ARCHIVE"
 }
 
-# If archive doesn’t exist or looks broken, (re)download
-if [[ ! -f "$RAW_ARCHIVE" ]]; then
-  echo "📥 Downloading archive..."
-  download_archive
-else
-  echo "🟡 Archive already exists, verifying..."
-  if ! tar -tzf "$RAW_ARCHIVE" >/dev/null 2>&1; then
-    echo "❌ Archive appears corrupted. Restarting download..."
-    rm -f "$RAW_ARCHIVE"
-    download_archive
-  fi
-fi
+verify_archive() {
+    echo "🟡 Archive already exists, verifying..."
+    if ! tar -tzf "$RAW_ARCHIVE" >/dev/null 2>&1; then
+        echo "❌ Archive appears corrupted. Resuming download..."
+        mv "$RAW_ARCHIVE" "$TMP_ARCHIVE"
+        download_archive
+    else
+        echo "✅ Archive looks OK"
+    fi
+}
 
-echo "⚙️ Extracting videos (subset for testing)..."
+extract_subset() {
+    local archive="$1"
+    local subset_count="$2"
 
-TMP_DIR=$(mktemp -d)
-trap 'rm -rf "$TMP_DIR"' INT TERM EXIT
+    echo "⚙️ Extracting $subset_count videos for testing..."
 
-# Extract only the first 20
-tar -tzf "$RAW_ARCHIVE" | head -n 20 \
-  | tar -xzf "$RAW_ARCHIVE" -C "$TMP_DIR" --strip-components=1 -T -
+    local tmp_dir
+    tmp_dir=$(mktemp -d)
+    trap 'rm -rf "$tmp_dir"' INT TERM EXIT
 
-rsync -a --ignore-existing "$TMP_DIR/" "$YOUCOOK_DIR/"
-rm -rf "$TMP_DIR"
+    # extract only the first N videos
+    tar -tzf "$archive" | head -n "$subset_count" \
+        | tar -xzf "$archive" -C "$tmp_dir" --strip-components=1 -T -
 
-echo "✅ Done. Videos are under $YOUCOOK_DIR/"
+    rsync -a --ignore-existing "$tmp_dir/" "$YOUCOOK_DIR/"
+    rm -rf "$tmp_dir"
+
+    echo "✅ Extraction complete. Videos are under $YOUCOOK_DIR/"
+}
+
+main() {
+    echo "📂 Downloading YouCook2 raw videos..."
+
+    if [[ ! -f "$RAW_ARCHIVE" ]]; then
+        download_archive
+    else
+        verify_archive
+    fi
+
+    # Extract a small subset (you can adjust this or remove for full extraction)
+    extract_subset "$RAW_ARCHIVE" 20
+}
+
+main "$@"
 

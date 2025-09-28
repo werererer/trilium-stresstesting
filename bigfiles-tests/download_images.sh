@@ -50,6 +50,7 @@ download_with_retry() {
             attempt=$((attempt + 1))
         else
             echo "❌ Failed with non-retryable error (exit code $status). Skipping..."
+            return 0 # "Success"
         fi
     done
 }
