@@ -3,7 +3,12 @@ set -euo pipefail
 
 ASSETS_DIR="assets"
 YOUCOOK_DIR="$ASSETS_DIR/youcook2"
-RAW_VIDEOS_URL="https://prism.eecs.umich.edu/natlouis/youcook2/raw_videos.tar.gz"
+YOUCOOK_DIR_TMP="$ASSETS_DIR/tmp"
+RAW_VIDEOS_URL="https://prism.eecs.umich.edu/natlouis/youcook2/raw_videos.partaa"
+# NOTE: This archive is hugh (144Gb) its better to use one of its 12 splits
+# going down to around 12 GB
+# For more info see: http://youcook2.eecs.umich.edu/download
+# RAW_VIDEOS_URL="https://prism.eecs.umich.edu/natlouis/youcook2/raw_videos.tar.gz"
 
 RAW_ARCHIVE="$YOUCOOK_DIR/raw_videos.tar.gz"
 TMP_ARCHIVE="${RAW_ARCHIVE}.part"
@@ -23,7 +28,7 @@ download_archive() {
 
 verify_archive() {
     echo "🟡 Archive already exists, verifying..."
-    if ! tar -tzf "$RAW_ARCHIVE" >/dev/null 2>&1; then
+    if ! tar -tf "$RAW_ARCHIVE" >/dev/null 2>&1; then
         echo "❌ Archive appears corrupted. Resuming download..."
         mv "$RAW_ARCHIVE" "$TMP_ARCHIVE"
         download_archive
@@ -32,24 +37,21 @@ verify_archive() {
     fi
 }
 
-extract_subset() {
+extract_all() {
     local archive="$1"
-    local subset_count="$2"
 
-    echo "⚙️ Extracting $subset_count videos for testing..."
+    echo "⚙️ Extracting all videos (resumable)..."
 
-    local tmp_dir
-    tmp_dir=$(mktemp -d)
-    trap 'rm -rf "$tmp_dir"' INT TERM EXIT
+    tar -xf "$archive" -C "$YOUCOOK_DIR" \
+        --strip-components=1 \
+        --checkpoint=.1000 \
+        --ignore-zeros \
+        --warning=no-unknown-keyword \
+        --keep-old-files || true
 
-    # extract only the first N videos
-    tar -tzf "$archive" | head -n "$subset_count" \
-        | tar -xzf "$archive" -C "$tmp_dir" --strip-components=1 -T -
-
-    rsync -a --ignore-existing "$tmp_dir/" "$YOUCOOK_DIR/"
-    rm -rf "$tmp_dir"
-
-    echo "✅ Extraction complete. Videos are under $YOUCOOK_DIR/"
+    echo
+    echo "ℹ️ tar: Unexpected EOF in archive is expected! (Because the dataset is incomplete anyways)"
+    echo "✅ Extraction completed!"
 }
 
 main() {
@@ -62,7 +64,7 @@ main() {
     fi
 
     # Extract a small subset (you can adjust this or remove for full extraction)
-    extract_subset "$RAW_ARCHIVE" 20
+    extract_all "$RAW_ARCHIVE"
 }
 
 main "$@"
